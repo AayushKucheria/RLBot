@@ -72,18 +72,18 @@ date = datetime.datetime.now().strftime("%y-%m-%d-%H-%M-%S")
 default_model_name = f"{args.env}_{args.algo}_seed{args.seed}_{date}"
 
 model_name = args.model or default_model_name
-model_dir = utils.get_model_dir(model_name)
+model_dir = utils.get_model_dir(model_name)  # TODO: What does this do?
 
 # Load loggers and Tensorboard writer
 
 txt_logger = utils.get_txt_logger(model_dir)
 csv_file, csv_logger = utils.get_csv_logger(model_dir)
-tb_writer = tensorboardX.SummaryWriter(model_dir)
+tb_writer = tensorboardX.SummaryWriter(model_dir)  # Write summaries and events to a file
 
 # Log command and all script arguments
 
-txt_logger.info("{}\n".format(" ".join(sys.argv)))
-txt_logger.info("{}\n".format(args))
+txt_logger.info("{}\n".format(" ".join(sys.argv)))  # Log provided params
+txt_logger.info("{}\n".format(args))  # Log all params
 
 # Set seed for all randomness sources
 
@@ -91,7 +91,7 @@ utils.seed(args.seed)
 
 # Set device
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")   # Use GPU if available, else use CPU
 txt_logger.info(f"Device: {device}\n")
 
 # Load environments
@@ -111,7 +111,7 @@ txt_logger.info("Training status loaded\n")
 
 # Load observations preprocessor
 
-obs_space, preprocess_obss = utils.get_obss_preprocessor(envs[0].observation_space)
+obs_space, preprocess_obss = utils.get_obss_preprocessor(envs[0].observation_space)  # TODO
 if "vocab" in status:
     preprocess_obss.vocab.load_vocab(status["vocab"])
 txt_logger.info("Observations preprocessor loaded")
@@ -152,7 +152,7 @@ while num_frames < args.frames:
     # Update model parameters
 
     update_start_time = time.time()
-    exps, logs1 = algo.collect_experiences()
+    exps, logs1 = algo.collect_experiences()  # TODO: What does this return?
     logs2 = algo.update_parameters(exps)
     logs = {**logs1, **logs2}
     update_end_time = time.time()

@@ -9,7 +9,7 @@ import gym
 import utils
 
 
-def get_obss_preprocessor(obs_space):
+def get_obss_preprocessor(obs_space):  # TODO: What's happening here?
     # Check if obs_space is an image space
     if isinstance(obs_space, gym.spaces.Box):
         obs_space = {"image": obs_space.shape}

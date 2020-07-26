@@ -44,7 +44,7 @@ envs = []
 for i in range(args.procs):
     env = utils.make_env(args.env, args.seed + 10000 * i)
     envs.append(env)
-env = ParallelEnv(envs)
+env = ParallelEnv(envs)  # TODO: Is this just to run our model on a lot of environments, to decrease random results?
 print("Environments loaded\n")
 
 # Load agent
@@ -71,7 +71,7 @@ log_episode_num_frames = torch.zeros(args.procs, device=device)
 
 while log_done_counter < args.episodes:
     actions = agent.get_actions(obss)
-    obss, rewards, dones, _ = env.step(actions)
+    obss, rewards, dones, _ = env.step(actions)  # TODO: What's dones?
     agent.analyze_feedbacks(rewards, dones)
 
     log_episode_return += torch.tensor(rewards, device=device, dtype=torch.float)

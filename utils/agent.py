@@ -19,7 +19,7 @@ class Agent:
         self.argmax = argmax
         self.num_envs = num_envs
 
-        if self.acmodel.recurrent:
+        if self.acmodel.recurrent:  # If model is recurrent, create memories.
             self.memories = torch.zeros(self.num_envs, self.acmodel.memory_size)
 
         self.acmodel.load_state_dict(utils.get_model_state(model_dir))
@@ -31,14 +31,14 @@ class Agent:
     def get_actions(self, obss):
         preprocessed_obss = self.preprocess_obss(obss, device=self.device)
 
-        with torch.no_grad():
+        with torch.no_grad():  # Disable gradient calculation
             if self.acmodel.recurrent:
                 dist, _, self.memories = self.acmodel(preprocessed_obss, self.memories)
             else:
                 dist, _ = self.acmodel(preprocessed_obss)
 
         if self.argmax:
-            actions = dist.probs.max(1, keepdim=True)[1]
+            actions = dist.probs.max(1, keepdim=True)[1] # TODO
         else:
             actions = dist.sample()
 
@@ -47,7 +47,7 @@ class Agent:
     def get_action(self, obs):
         return self.get_actions([obs])[0]
 
-    def analyze_feedbacks(self, rewards, dones):
+    def analyze_feedbacks(self, rewards, dones):  # TODO
         if self.acmodel.recurrent:
             masks = 1 - torch.tensor(dones, dtype=torch.float).unsqueeze(1)
             self.memories *= masks
